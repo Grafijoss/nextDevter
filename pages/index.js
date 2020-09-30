@@ -1,9 +1,7 @@
-import Head from 'next/head'
-import Link from 'next/link'
-
 import { colors } from '../styles/theme'
 
 import AppLayout from '../components/AppLayout'
+import Button from '../components/Button'
 
 // import styles from '../styles/Home.module.css'
 
@@ -15,11 +13,19 @@ export default function Home() {
 					<img src='/devter-logo.png' alt="logo" />
 					<h1>Devter</h1>
 					<h2>Talk about development <br />with developers</h2>
+					<div>
+						<Button>
+							Login with GitHub
+						</Button>
+					</div>
 				</section>
 			</AppLayout>
 		
 			<style jsx>
 				{`
+					div {
+						margin-top: 16px;
+					}
 
 					section {
 						display: grid;
