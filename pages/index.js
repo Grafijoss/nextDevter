@@ -1,6 +1,8 @@
 import Head from 'next/head'
 import Link from 'next/link'
 
+import { colors } from '../styles/theme'
+
 import AppLayout from '../components/AppLayout'
 
 // import styles from '../styles/Home.module.css'
@@ -8,32 +10,39 @@ import AppLayout from '../components/AppLayout'
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
 			<AppLayout>
-					<h1>
-						<a href="https://nextjs.org">Depter!</a>
-					</h1>
-					<nav>
-						<Link href="/timeline">
-							timeline
-						</Link>
-					</nav>
+				<section>
+					<img src='/devter-logo.png' alt="logo" />
+					<h1>Devter</h1>
+					<h2>Talk about development <br />with developers</h2>
+				</section>
 			</AppLayout>
 		
 			<style jsx>
 				{`
-					h1 {
-						text-align: center;
-						font-size: 48px;
+
+					section {
+						display: grid;
+						height: 100%;
+						place-content: center;
+						place-items: center;
 					}
 
-					nav {
+					img {
+						width: 120px;
+					}
+
+					h1 {
+						color: ${colors.primary};
 						font-size: 24px;
-						text-align:center;
+						font-weight: 800;
+						margin-bottom: 16px;
+					}
+
+					h2 {
+						color: ${colors.secondary};
+						font-size: 21px;
+						margin: 0;
 					}
 				`}
 			</style>
