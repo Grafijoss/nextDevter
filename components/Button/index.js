@@ -9,16 +9,22 @@ export default function Button ({ children, onClick }) {
 			<style jsx>
 				{`
 					button {
+						align-items: center;
 						background: ${colors.black};
 						border: 0;
 						border-radius: 9999px;
 						color: ${colors.white};
 						cursor: pointer;
+						display: flex;
 						font-weight: 800;
 						padding: 8px 24px;
 						transition: .2s;
   					will-change: transform;
-					} 
+					}
+
+					button > :global(svg) {
+						margin-right: 8px;
+					}
 
 					button:hover {
 						opacity: .7;
