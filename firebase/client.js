@@ -11,9 +11,31 @@ const firebaseConfig = {
   measurementId: "G-K2S49ZQTGV"
 };
 
-firebase.initializeApp(firebaseConfig)
+!firebase.apps.length && firebase.initializeApp(firebaseConfig)
+
+const mapUserFromFirebaseAuthToUser = (user) => {
+	const {displayName, email, photoURL } = user
+		console.log(user)
+		return {
+			avatar: photoURL,
+			username: displayName,
+			email
+		}
+}
+
+export const onAuthStateChanged = (onChange) => {
+	return firebase
+	.auth()
+	.onAuthStateChanged(user => {
+		const normalizerdUser = mapUserFromFirebaseAuthToUser(user)
+		onChange(normalizerdUser)
+	})
+}
 
 export const loginWithGitHub = () => {
 	const gitHubProvider = new firebase.auth.GithubAuthProvider()
-	return firebase.auth().signInWithPopup(gitHubProvider)
+	return firebase
+	.auth()
+	.signInWithPopup(gitHubProvider)
+	// .then(mapUserFromFirebaseAuthToUser) // this line is going to execute automatically once signInWithPopup finishes
 }
