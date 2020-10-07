@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
-import { colors } from "../styles/theme";
+import { useEffect, useState } from 'react'
+import { colors } from '../styles/theme'
 
-import AppLayout from "../components/AppLayout";
-import Button from "../components/Button";
-import GitHub from "../components/icons/GitHub";
+import AppLayout from '../components/AppLayout'
+import Button from '../components/Button'
+import GitHub from '../components/icons/GitHub'
+import Avatar from '../components/Avatar'
 
-import { loginWithGitHub, onAuthStateChanged } from "../firebase/client";
+import { loginWithGitHub, onAuthStateChanged } from '../firebase/client'
 
 // import styles from '../styles/Home.module.css'
 
 export default function Home() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    onAuthStateChanged(setUser);
-  }, []);
+    onAuthStateChanged(setUser)
+  }, [])
 
   const handleClick = () => {
     loginWithGitHub().then((user) => {
-      const { avatar, username, url } = user;
-      setUser(user);
-      console.log(user);
-    });
-  };
+      //   const { avatar, username, url } = user
+      setUser(user)
+      console.log(user)
+    })
+  }
 
   return (
     <>
@@ -42,8 +43,7 @@ export default function Home() {
               </Button>
             ) : (
               <div>
-                <img src={user.avatar}></img>
-                <strong>{user.username}</strong>
+                <Avatar src={user.avatar} alt={user.username} />
               </div>
             )}
           </div>
@@ -82,5 +82,5 @@ export default function Home() {
         `}
       </style>
     </>
-  );
+  )
 }
