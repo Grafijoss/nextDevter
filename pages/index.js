@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-import { colors } from '../styles/theme'
+import { colors } from 'styles/theme'
 
-import AppLayout from '../components/AppLayout'
-import Button from '../components/Button'
-import GitHub from '../components/icons/GitHub'
-import Avatar from '../components/Avatar'
+import AppLayout from 'components/AppLayout'
+import Button from 'components/Button'
+import GitHub from 'components/icons/GitHub'
+import Avatar from 'components/Avatar'
 
-import { loginWithGitHub, onAuthStateChanged } from '../firebase/client'
+import { loginWithGitHub, onAuthStateChanged } from 'firebase/client'
 
 // import styles from '../styles/Home.module.css'
 
