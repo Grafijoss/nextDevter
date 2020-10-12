@@ -43,7 +43,11 @@ export default function Home() {
               </Button>
             ) : (
               <div>
-                <Avatar src={user.avatar} alt={user.username} />
+                <Avatar
+                  src={user.avatar}
+                  alt={user.username}
+                  text={user.username}
+                />
               </div>
             )}
           </div>
