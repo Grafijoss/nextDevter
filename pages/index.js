@@ -4,25 +4,38 @@ import { colors } from 'styles/theme'
 import AppLayout from 'components/AppLayout'
 import Button from 'components/Button'
 import GitHub from 'components/icons/GitHub'
-import Avatar from 'components/Avatar'
 
 import { loginWithGitHub, onAuthStateChanged } from 'firebase/client'
 
-// import styles from '../styles/Home.module.css'
+import { useRouter } from 'next/router'
+
+const USER_STATES = {
+  NOT_LOGGED: null,
+  NOT_KNOW: undefined,
+}
 
 export default function Home() {
   const [user, setUser] = useState(null)
+  const router = useRouter()
 
   useEffect(() => {
     onAuthStateChanged(setUser)
   }, [])
 
+  useEffect(() => {
+    // let's get the router from the router user HOOK
+    user && router.replace('/home')
+  }, [user]) // the effect should run every time the user changes
+
   const handleClick = () => {
-    loginWithGitHub().then((user) => {
-      //   const { avatar, username, url } = user
-      setUser(user)
-      console.log(user)
-    })
+    loginWithGitHub()
+      // .then((user) => { do not need to setUser becasue we set the user information with onAuthStateChanged
+      //   setUser(user)
+      //   console.log(user)
+      // })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   return (
@@ -36,20 +49,13 @@ export default function Home() {
             with developers
           </h2>
           <div>
-            {user === null ? (
+            {user === USER_STATES.NOT_LOGGED && (
               <Button onClick={handleClick}>
                 <GitHub fill="#fff" height={24} width={24} />
                 Login with GitHub
               </Button>
-            ) : (
-              <div>
-                <Avatar
-                  src={user.avatar}
-                  alt={user.username}
-                  text={user.username}
-                />
-              </div>
             )}
+            {user === USER_STATES.NOT_KNOW && <img src="/spinner.gif" />}
           </div>
         </section>
       </AppLayout>

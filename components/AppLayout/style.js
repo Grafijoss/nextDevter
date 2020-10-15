@@ -12,9 +12,10 @@ export const globalStyles = css.global`
       radial-gradient(${backgroundColor} 1px, transparent 1px);
     background-position: 0 0, 25px 25px;
     background-size: 50px 50px;
-    padding: 0;
-    margin: 0;
     font-family: ${fonts.base};
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
   }
 
   a {
@@ -41,11 +42,14 @@ export default css`
     border-radius: 10px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     height: 100%;
+    overflow-y: auto;
+    position: relative;
     width: 100%;
   }
+
   @media (min-width: ${breakpoints.mobile}) {
     main {
-      height: 97%;
+      height: 95%;
       width: ${breakpoints.mobile};
     }
   }

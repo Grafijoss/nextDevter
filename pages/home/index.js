@@ -35,10 +35,12 @@ export default function HomePage() {
       <style jsx>{`
         header {
           align-items: center;
-          border-bottom: 1px solid #ccc;
+          background: #ffffffaa;
+          backdrop-filter: blur(5px);
+          border-bottom: 1px solid #eee;
           display: flex;
           height: 49px;
-          position: fixed;
+          position: sticky;
           top: 0;
           width: 100%;
         }
@@ -46,20 +48,20 @@ export default function HomePage() {
         h2 {
           font-size: 21px;
           font-weight: 800;
+          padding-left: 15px;
         }
 
         nav {
+          background: #fff;
           bottom: 0;
-          border-top: 1px solid #ccc;
+          border-top: 1px solid #eee;
           height: 40px;
-          position: fixed;
+          position: sticky;
           width: 100%;
-        }
-
-        section {
-          padding-top: 49px;
         }
       `}</style>
     </>
   )
 }
+
+// backdrop-filter: blur(5px); blur with opacity
