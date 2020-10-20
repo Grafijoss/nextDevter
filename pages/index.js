@@ -1,41 +1,27 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { colors } from 'styles/theme'
 
 import AppLayout from 'components/AppLayout'
 import Button from 'components/Button'
 import GitHub from 'components/icons/GitHub'
 
-import { loginWithGitHub, onAuthStateChanged } from 'firebase/client'
+import { loginWithGitHub } from 'firebase/client'
 
 import { useRouter } from 'next/router'
-
-const USER_STATES = {
-  NOT_LOGGED: null,
-  NOT_KNOW: undefined,
-}
+import useUser, { USER_STATES } from 'hooks/useUser'
 
 export default function Home() {
-  const [user, setUser] = useState(null)
+  const user = useUser()
   const router = useRouter()
 
   useEffect(() => {
-    onAuthStateChanged(setUser)
-  }, [])
-
-  useEffect(() => {
-    // let's get the router from the router user HOOK
     user && router.replace('/home')
-  }, [user]) // the effect should run every time the user changes
+  }, [user])
 
   const handleClick = () => {
-    loginWithGitHub()
-      // .then((user) => { do not need to setUser becasue we set the user information with onAuthStateChanged
-      //   setUser(user)
-      //   console.log(user)
-      // })
-      .catch((err) => {
-        console.log(err)
-      })
+    loginWithGitHub().catch((err) => {
+      console.log(err)
+    })
   }
 
   return (
