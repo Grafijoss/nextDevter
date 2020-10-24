@@ -13,13 +13,17 @@ const firebaseConfig = {
 
 !firebase.apps.length && firebase.initializeApp(firebaseConfig)
 
+// data base service
+const db = firebase.firestore()
+
 const mapUserFromFirebaseAuthToUser = (user) => {
-  const { displayName, email, photoURL } = user
+  const { displayName, email, photoURL, uid } = user
   console.log(user)
   return {
     avatar: photoURL,
-    username: displayName,
+    userName: displayName,
     email,
+    uid,
   }
 }
 
@@ -34,4 +38,45 @@ export const loginWithGitHub = () => {
   const gitHubProvider = new firebase.auth.GithubAuthProvider()
   return firebase.auth().signInWithPopup(gitHubProvider)
   // .then(mapUserFromFirebaseAuthToUser) // this line is going to execute automatically once signInWithPopup finishes
+}
+
+export const addDevit = ({ avatar, content, userId, userName }) => {
+  // we  will pass the document that we have to add
+  return db.collection('devis').add({
+    avatar,
+    content,
+    userId,
+    userName,
+    createAt: firebase.firestore.Timestamp.fromDate(new Date()),
+    likesCount: 0,
+    sharedCount: 0,
+  })
+}
+
+export const fetchLatestDevit = () => {
+  return (
+    db
+      .collection('devis')
+      .get()
+      // snapshot.docs
+      .then(({ docs }) => {
+        return docs.map((doc) => {
+          // we must convert the data into an object
+          const data = doc.data()
+          // we must return the unique id of document
+          const id = doc.id
+          const { createAt } = data
+          //   const intl = new Intl.DateTimeFormat('de-ES')
+          //   const normalizedCreatedAt = firebase.firestore.Timestamp.toDate(
+          //     new Date(createAt.seconds)
+          //   )
+          //   const normalizedCreatedAt = intl.format(new Date(createAt.seconds))
+          return {
+            ...data,
+            id,
+            createAt: createAt.seconds,
+          }
+        })
+      })
+  )
 }
