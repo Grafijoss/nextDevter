@@ -5,6 +5,7 @@ export default function Devit(devit) {
   const { avatar, userName, content, id, createAt } = devit
 
   const timeAgo = useTimeAgo(createAt)
+  //   const createdAtFormated = useDateTimeFormat(createdAt)
 
   return (
     <>
