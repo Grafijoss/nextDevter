@@ -11,8 +11,7 @@ export default function Devit(devit) {
         </div>
         <section>
           <header>
-            <date>{createAt}</date>
-            <strong>{userName}</strong>
+            <strong>{userName}</strong> - <date>{createAt}</date>
           </header>
           <p>{content}</p>
         </section>
@@ -32,6 +31,11 @@ export default function Devit(devit) {
         p {
           margin: 0;
           line-height: 1.3125;
+        }
+
+        date {
+          color: #555;
+          font-size: 14px;
         }
       `}</style>
     </>
