@@ -66,14 +66,17 @@ export const fetchLatestDevit = () => {
           // we must return the unique id of document
           const id = doc.id
           const { createAt } = data
+          /* native way to formate the date
           const date = new Date(createAt.seconds * 1000) // we always have to pass the time in milliseconds
           const normalizedCreatedAt = new Intl.DateTimeFormat('es-CO').format(
             date
-          )
+		  )
+		  */
+
           return {
             ...data, // todos los elementos que estan en el doc de firebase
             id,
-            createAt: normalizedCreatedAt,
+            createAt: +createAt.toDate(),
           }
         })
       })
