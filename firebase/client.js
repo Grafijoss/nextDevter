@@ -83,3 +83,12 @@ export const fetchLatestDevit = () => {
       })
   )
 }
+
+export const uploadImage = (file) => {
+  // the first thing is to make a reference to the storage method
+  const ref = firebase.storage().ref(`images/${file.name}`)
+  // I want what I give you put it in this reference like an upload
+  // task: we can hear events like what is it state, progress, completed
+  const task = ref.put(file)
+  return task
+}

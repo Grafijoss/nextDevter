@@ -17,10 +17,26 @@ const COMPOSE_STATES = {
   ERROR: -1,
 }
 
+const DRAG_IMAGE_STATES = {
+  ERROR: -1,
+  NONE: 0,
+  DRAG_OVER: 1,
+  UPLOADING: 2,
+  COMPLETE: 3,
+}
+
 export default function ComposeTweet() {
-  const user = useUser()
   const [message, setMessage] = useState('')
   const [status, setSttaus] = useState(COMPOSE_STATES.USER_NOT_KNOWN)
+
+  const [drag, setDrag] = useState(DRAG_IMAGE_STATES.NONE)
+  // file will be a browser object
+  // const [file, setFile] = useState(null)
+
+  //   const [task, setTask] = useState(null)
+  //   const [imgURL, setImgURL] = useState(null)
+
+  const user = useUser()
   const router = useRouter()
 
   const handleChange = (event) => {
@@ -55,6 +71,18 @@ export default function ComposeTweet() {
       })
   }
 
+  const handleDragEnter = (e) => {
+    setDrag(DRAG_IMAGE_STATES.DRAG_OVER)
+  }
+
+  const handleDragLeave = (e) => {
+    setDrag(DRAG_IMAGE_STATES.NONE)
+  }
+
+  const handleDragDrop = (e) => {
+    setDrag(DRAG_IMAGE_STATES.NONE)
+  }
+
   return (
     <>
       <AppLayout>
@@ -64,6 +92,9 @@ export default function ComposeTweet() {
         <form onSubmit={handleSubmit}>
           <textarea
             onChange={handleChange}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDragDrop}
             placeholder="¿Qué esta pasando?"
           ></textarea>
           <div>
@@ -75,12 +106,20 @@ export default function ComposeTweet() {
         div {
           padding: 15px;
         }
+
+        padding {
+          margin: 10px;
+        }
+
         textarea {
-          border: 0;
+          border: ${drag === DRAG_IMAGE_STATES.DRAG_OVER
+            ? '3px dashed #09f'
+            : '3px solid transparent'};
+          border-radius: 10px;
           font-size: 21px;
-          min-height: 200px0000;
-          outline: 0;
+          min-height: 200px;
           padding: 15px;
+          outline: 0;
           resize: none;
           width: 100%;
         }
