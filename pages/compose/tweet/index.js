@@ -1,3 +1,6 @@
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+
 import AppLayout from 'components/AppLayout'
 import Button from 'components/Button'
 
@@ -6,7 +9,6 @@ import useUser from 'hooks/useUser'
 import { useState } from 'react'
 
 import { addDevit } from 'firebase/client'
-import { useRouter } from 'next/router'
 
 const COMPOSE_STATES = {
   USER_NOT_KNOWN: 0,
@@ -56,6 +58,9 @@ export default function ComposeTweet() {
   return (
     <>
       <AppLayout>
+        <Head>
+          <title>Crear un Devit / Devter</title>
+        </Head>
         <form onSubmit={handleSubmit}>
           <textarea
             onChange={handleChange}

@@ -57,6 +57,7 @@ export const fetchLatestDevit = () => {
   return (
     db
       .collection('devis')
+      .orderBy('createAt', 'desc') // we can order items by a parameter desc asc
       .get()
       // snapshot.docs
       .then(({ docs }) => {
