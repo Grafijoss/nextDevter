@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react'
+
+import Avatar from 'components/Avatar'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -6,9 +9,8 @@ import Button from 'components/Button'
 
 import useUser from 'hooks/useUser'
 // import { getDisplayName } from 'next/dist/next-server/lib/utils'
-import { useState } from 'react'
 
-import { addDevit } from 'firebase/client'
+import { addDevit, uploadImage } from 'firebase/client'
 
 const COMPOSE_STATES = {
   USER_NOT_KNOWN: 0,
@@ -33,11 +35,28 @@ export default function ComposeTweet() {
   // file will be a browser object
   // const [file, setFile] = useState(null)
 
-  //   const [task, setTask] = useState(null)
-  //   const [imgURL, setImgURL] = useState(null)
+  const [task, setTask] = useState(null)
+  const [imgURL, setImgURL] = useState(null)
 
   const user = useUser()
   const router = useRouter()
+
+  useEffect(() => {
+    // si la tarea existe
+    if (task) {
+      const onProgress = () => {}
+      const onError = () => {}
+      const onComplete = () => {
+        console.log('onComplete')
+        // nos retorna la url de la imagen en el storage
+        task.snapshot.ref.getDownloadURL().then((imageUrl) => {
+          setImgURL(imageUrl)
+        })
+      }
+      // llamamos al statte_changed  the firebase
+      task.on('state_changed', onProgress, onError, onComplete)
+    }
+  }, [task])
 
   const handleChange = (event) => {
     const { value } = event.target
@@ -55,12 +74,14 @@ export default function ComposeTweet() {
       content: message,
       userId: user.uid,
       userName: user.userName,
+      img: imgURL, // añadimos la imagen al devit
     })
     addDevit({
       avatar: user.avatar,
       content: message,
       userId: user.uid,
       userName: user.userName,
+      img: imgURL, // añadimos la imagen al devit
     })
       .then(() => {
         router.push('/home')
@@ -72,15 +93,30 @@ export default function ComposeTweet() {
   }
 
   const handleDragEnter = (e) => {
+    e.preventDefault()
     setDrag(DRAG_IMAGE_STATES.DRAG_OVER)
   }
 
   const handleDragLeave = (e) => {
+    e.preventDefault()
     setDrag(DRAG_IMAGE_STATES.NONE)
   }
 
   const handleDragDrop = (e) => {
+    // evitamos el evento por defecto del navegador
+    e.preventDefault()
     setDrag(DRAG_IMAGE_STATES.NONE)
+    // estas llamadas a los eventos no siempre son sincronos
+    // ellength files llega en 0
+    // console.log(e.dataTransfer)
+
+    // podemos llamar directamente a la posición de files y lo va a encontrar
+    // nos va a retornar toda la información del archivo o archivos
+    // console.log(e.dataTransfer.files[0])
+
+    const file = e.dataTransfer.files[0]
+    const task = uploadImage(file)
+    setTask(task)
   }
 
   return (
@@ -89,28 +125,67 @@ export default function ComposeTweet() {
         <Head>
           <title>Crear un Devit / Devter</title>
         </Head>
-        <form onSubmit={handleSubmit}>
-          <textarea
-            onChange={handleChange}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDragDrop}
-            placeholder="¿Qué esta pasando?"
-          ></textarea>
-          <div>
-            <Button disabled={isButtonDisabled}>Devitiar</Button>
-          </div>
-        </form>
+        <section className="form-container">
+          {user && (
+            <section className="avatar-container ">
+              <Avatar alt={user.userName} src={user.avatar}></Avatar>
+            </section>
+          )}
+          <form onSubmit={handleSubmit}>
+            <textarea
+              onChange={handleChange}
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDragDrop}
+              placeholder="¿Qué esta pasando?"
+            ></textarea>
+            {imgURL && (
+              <section className="remove-img">
+                <button onClick={() => setImgURL(null)}>x</button>
+                <img src={imgURL} />
+              </section>
+            )}
+            <div>
+              <Button disabled={isButtonDisabled}>Devitiar</Button>
+            </div>
+          </form>
+        </section>
       </AppLayout>
       <style jsx>{`
         div {
           padding: 15px;
         }
-
-        padding {
-          margin: 10px;
+        .avatar-container {
+          padding-top: 20px;
+          padding-left: 10px;
         }
-
+        button {
+          background: rgba(0, 0, 0, 0.3);
+          border: 0;
+          border-radius: 999px;
+          color: #fff;
+          font-size: 24px;
+          width: 32px;
+          height: 32px;
+          top: 15px;
+          position: absolute;
+          right: 15px;
+        }
+        .form-container {
+          align-items: flex-start;
+          display: flex;
+        }
+        .remove-img {
+          position: relative;
+        }
+        form {
+          padding: 10px;
+        }
+        img {
+          border-radius: 10px;
+          height: auto;
+          width: 100%;
+        }
         textarea {
           border: ${drag === DRAG_IMAGE_STATES.DRAG_OVER
             ? '3px dashed #09f'

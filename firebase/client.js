@@ -40,11 +40,12 @@ export const loginWithGitHub = () => {
   // .then(mapUserFromFirebaseAuthToUser) // this line is going to execute automatically once signInWithPopup finishes
 }
 
-export const addDevit = ({ avatar, content, userId, userName }) => {
+export const addDevit = ({ avatar, content, img, userId, userName }) => {
   // we  will pass the document that we have to add
   return db.collection('devis').add({
     avatar,
     content,
+    img,
     userId,
     userName,
     createAt: firebase.firestore.Timestamp.fromDate(new Date()),

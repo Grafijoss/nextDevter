@@ -2,7 +2,7 @@ import Avatar from 'components/Avatar'
 import useTimeAgo from 'hooks/useTimeAgo'
 
 export default function Devit(devit) {
-  const { avatar, userName, content, id, createAt } = devit
+  const { avatar, userName, content, id, img, createAt } = devit
 
   const timeAgo = useTimeAgo(createAt)
   //   const createdAtFormated = useDateTimeFormat(createdAt)
@@ -17,9 +17,10 @@ export default function Devit(devit) {
           <header>
             <strong>{userName}</strong>
             <span> - </span>
-            <date>{timeAgo}</date>
+            <strong>{timeAgo}</strong>
           </header>
           <p>{content}</p>
+          {img && <img src={img} />}
         </section>
       </article>
 
@@ -28,6 +29,13 @@ export default function Devit(devit) {
           border-bottom: 2px solid #eaf7ff;
           display: flex;
           padding: 10px 15px;
+        }
+
+        img {
+          border-radius: 10px;
+          height: auto;
+          margin-top: 10px;
+          width: 100%;
         }
 
         div {
@@ -39,7 +47,7 @@ export default function Devit(devit) {
           line-height: 1.3125;
         }
 
-        date {
+        strong {
           color: #555;
           font-size: 14px;
         }
