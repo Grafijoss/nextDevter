@@ -1,11 +1,13 @@
 import Avatar from 'components/Avatar'
 import useTimeAgo from 'hooks/useTimeAgo'
+import useDateTimeFormat from 'hooks/useDateTimeFormat'
+import Link from 'next/link'
 
 export default function Devit(devit) {
   const { avatar, userName, content, id, img, createAt } = devit
 
   const timeAgo = useTimeAgo(createAt)
-  //   const createdAtFormated = useDateTimeFormat(createdAt)
+  const createdAtFormated = useDateTimeFormat(createAt)
 
   return (
     <>
@@ -17,7 +19,12 @@ export default function Devit(devit) {
           <header>
             <strong>{userName}</strong>
             <span> - </span>
-            <strong>{timeAgo}</strong>
+            {/* si el path tiene un segmento dinamico */}
+            <Link href={`/status/[id]`} as={`/status/${id}`}>
+              <a>
+                <time title={createdAtFormated}>{timeAgo}</time>
+              </a>
+            </Link>
           </header>
           <p>{content}</p>
           {img && <img src={img} />}
@@ -47,9 +54,13 @@ export default function Devit(devit) {
           line-height: 1.3125;
         }
 
-        strong {
+        a {
           color: #555;
           font-size: 14px;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
         }
       `}</style>
     </>

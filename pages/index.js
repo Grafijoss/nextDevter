@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { colors } from 'styles/theme'
 
-import AppLayout from 'components/AppLayout'
 import Button from 'components/Button'
 import GitHub from 'components/icons/GitHub'
 
@@ -26,25 +25,23 @@ export default function Home() {
 
   return (
     <>
-      <AppLayout>
-        <section>
-          <img src="/devter-logo.png" alt="logo" />
-          <h1>Devter</h1>
-          <h2>
-            Talk about development <br />
-            with developers
-          </h2>
-          <div>
-            {user === USER_STATES.NOT_LOGGED && (
-              <Button onClick={handleClick}>
-                <GitHub fill="#fff" height={24} width={24} />
-                Login with GitHub
-              </Button>
-            )}
-            {user === USER_STATES.NOT_KNOW && <img src="/spinner.gif" />}
-          </div>
-        </section>
-      </AppLayout>
+      <section>
+        <img src="/devter-logo.png" alt="logo" />
+        <h1>Devter</h1>
+        <h2>
+          Talk about development <br />
+          with developers
+        </h2>
+        <div>
+          {user === USER_STATES.NOT_LOGGED && (
+            <Button onClick={handleClick}>
+              <GitHub fill="#fff" height={24} width={24} />
+              Login with GitHub
+            </Button>
+          )}
+          {user === USER_STATES.NOT_KNOW && <img src="/spinner.gif" />}
+        </div>
+      </section>
 
       <style jsx>
         {`

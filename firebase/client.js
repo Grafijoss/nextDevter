@@ -11,6 +11,8 @@ const firebaseConfig = {
   measurementId: 'G-K2S49ZQTGV',
 }
 
+// inicializamos la aplicación desde el cliente
+// con la configuración de firebase
 !firebase.apps.length && firebase.initializeApp(firebaseConfig)
 
 // data base service
