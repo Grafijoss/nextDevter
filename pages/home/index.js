@@ -16,6 +16,7 @@ export default function HomePage() {
 
   const user = useUser()
 
+  // este es un data fetching del lado del cliente
   useEffect(() => {
     user && fetchLatestDevit().then(setTimeline)
   }, [user])

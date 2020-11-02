@@ -26,8 +26,14 @@ export default (request, response) => {
       // tenemos que llamar un metodo
       // para extraer la informacion
       const data = doc.data()
+      const id = doc.id
+      const { createAt } = data
       // retornamos data
-      response.json(data)
+      response.json({
+        ...data,
+        id,
+        createAt: +createAt.toDate(),
+      })
     })
     // debemos 9controlar que pasa
     // cuando no existe el dcocumento
