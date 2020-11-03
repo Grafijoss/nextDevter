@@ -10,6 +10,41 @@ export default function DeviPage(props) {
   )
 }
 
+// en lugar de ser la propiedad de un componente
+// vamos a exportar como constante
+// podemos usar async para llamados asincronos
+// recibe un parametro context
+
+export async function getServerSideProps(context) {
+  // en lugar de query recibe params
+  // params, req, res, query
+  const { params, res } = context
+  const { id } = params
+
+  // puede ser asincrono retornando una promesa
+  // las rutas deben ser absolutas
+
+  const apiResponse = await fetch(`http://localhost:3000/api/devits/${id}`)
+  if (apiResponse.ok) {
+    const props = await apiResponse.json()
+    // tenemos que devolver um objeto
+    // con el key props y dentro las props de apiResponse
+    return {
+      props,
+    }
+  }
+  if (res) {
+    // redireccion
+    console.log('el response existe desde el servidor')
+    // la pagina no existe
+    // res.writeHead(404).end()
+    // podemos redirigirlo a otra pagina
+    res.writeHead(301, { location: '/' }).end()
+  }
+}
+
+/* getInitialProps
+
 // es el metodo mas famoso
 // va a dejar de funcionar
 // tiene que ser una propiedadd estatica
@@ -53,6 +88,7 @@ DeviPage.getInitialProps = (context) => {
   // puede ser asincrono retornando una promesa
   // las rutas deben ser absolutas
   return fetch(`http://localhost:3000/api/devits/${id}`).then((apiResponse) => {
+	// devuelve un objeto que directamente va como props
     // si la respuesta es ok
     // comvertimos la respuesta a json()
     if (apiResponse.ok) return apiResponse.json()
@@ -69,3 +105,4 @@ DeviPage.getInitialProps = (context) => {
     }
   })
 }
+ */
