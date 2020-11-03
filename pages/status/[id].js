@@ -15,6 +15,9 @@ export default function DeviPage(props) {
   // if (!props.id) return 'Loading'
   // y verificar si estamos en estado fallback
   if (router.isFallback) return '...Loading'
+  // si alguien ha generado esa pagina estatica
+  // ya no debe generarla nuevamente
+  // nunca mas entrara al if
   if (!props.id) return 'Loading'
   return (
     <>
