@@ -1,4 +1,5 @@
 import Devit from 'components/Devit'
+import { firestore } from 'firebase/admin'
 
 export default function DeviPage(props) {
   console.log('estas son las props de la pagina')
@@ -9,6 +10,81 @@ export default function DeviPage(props) {
     </>
   )
 }
+
+// segenera una sola vez
+// se genera en el build time
+// le vamos a decir que paths
+// tiene que hacer que funcione el recupera la informacion
+// por que tiene que generar el html de cada una de las paginas
+// cuando es dinamico
+// por eso tenemos que decirle a getStaticProps
+// cuales son los paths que tiene que generar
+
+export async function getStaticPaths() {
+  // retornamos un objeto con una lista
+  // a de todos los paths que debe generar
+  // y el fallback
+
+  return {
+    paths: [
+      {
+        params: { id: 'AxJ5YHMAgb16WvIKUCwo' },
+      },
+    ],
+    fallback: false,
+  }
+}
+
+// se ejecuta en build time
+// npm run build
+// tenemos que acompañar este metodo
+// con el metodo getStaticPaths
+export async function getStaticProps(context) {
+  // en lugar de query recibe params
+  // params, req, query
+  const { params } = context
+  const { id } = params
+
+  // el api de fetch no existe dn build time
+  // tenemos que llamar el firestore para que funcione
+
+  return (
+    firestore
+      .collection('devis')
+      // busca el id dentro de la coleccion
+      .doc(id)
+      // una vez lo encuentre quiero que lo recupere
+      .get()
+      // nos retorna un objeto completo de firestore
+      .then((doc) => {
+        // tenemos que llamar un metodo
+        // para extraer la informacion
+        const data = doc.data()
+        const id = doc.id
+        const { createAt } = data
+        // retornamos data
+        const props = {
+          ...data,
+          id,
+          createAt: +createAt.toDate(),
+        }
+        // tenemos que devolver um objeto
+        // con el key props y dentro las props de apiResponse
+        // por que podemos retornar mas informacion
+        return {
+          props,
+        }
+      })
+      // debemos 9controlar que pasa
+      // cuando no existe el dcocumento
+      .catch(() => {
+        // debemos terminar la respuesta con .end()
+        return { props: {} }
+      })
+  )
+}
+
+/* getServerSideProps
 
 // en lugar de ser la propiedad de un componente
 // vamos a exportar como constante
@@ -42,6 +118,8 @@ export async function getServerSideProps(context) {
     res.writeHead(301, { location: '/' }).end()
   }
 }
+
+/*
 
 /* getInitialProps
 
