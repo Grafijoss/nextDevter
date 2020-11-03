@@ -1,9 +1,21 @@
 import Devit from 'components/Devit'
 import { firestore } from 'firebase/admin'
+import { useRouter } from 'next/router'
 
 export default function DeviPage(props) {
-  console.log('estas son las props de la pagina')
-  console.log(props)
+  const router = useRouter()
+
+  // podemos verificar que el parametro existe
+  // y en el caso de que no exista
+  // mientras next genera el nuevo archivo estatico
+  // genera al vuelo archivos estaticos
+  // lo genera bajo demanda
+  // podemos mostrar un spinner
+  // tambien podemos usar el router
+  // if (!props.id) return 'Loading'
+  // y verificar si estamos en estado fallback
+  if (router.isFallback) return '...Loading'
+  if (!props.id) return 'Loading'
   return (
     <>
       <Devit {...props}></Devit>
@@ -31,7 +43,19 @@ export async function getStaticPaths() {
         params: { id: 'AxJ5YHMAgb16WvIKUCwo' },
       },
     ],
-    fallback: false,
+    // si el fallback es false
+    // y el path no existe
+    // retorna 404
+
+    // si fallback es tru
+    // reotrna un error diferente
+    // por que intenta reenderizar la aplicación
+    // aunque el path no existe
+    // si no hace match
+    // next intentara generar el archivo en el servidor
+    // si no el va a tratar de reenderizar
+    // con la información que tiene
+    fallback: true,
   }
 }
 
