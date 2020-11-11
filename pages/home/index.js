@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import Devit from 'components/Devit'
 import useUser from 'hooks/useUser'
-import { fetchLatestDevit } from 'firebase/client'
+import { listenLatestDevits } from 'firebase/client'
 
 import Create from 'components/icons/Create'
 import Home from 'components/icons/Home'
@@ -18,7 +18,10 @@ export default function HomePage() {
 
   // este es un data fetching del lado del cliente
   useEffect(() => {
-    user && fetchLatestDevit().then(setTimeline)
+    // user && fetchLatestDevit().then(setTimeline)
+    if (user) {
+      listenLatestDevits(setTimeline)
+    }
   }, [user])
 
   return (

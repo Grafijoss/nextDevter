@@ -56,6 +56,51 @@ export const addDevit = ({ avatar, content, img, userId, userName }) => {
   })
 }
 
+const mapDevitFromFirebaseToDevitObject = (doc) => {
+  // we must convert the data into an object
+  const data = doc.data()
+  // we must return the unique id of document
+  const id = doc.id
+  const { createAt } = data
+  /* native way to formate the date
+	const date = new Date(createAt.seconds * 1000) // we always have to pass the time in milliseconds
+	const normalizedCreatedAt = new Intl.DateTimeFormat('es-CO').format(
+	  date
+	)
+	*/
+
+  return {
+    ...data, // todos los elementos que estan en el doc de firebase
+    id,
+    createAt: +createAt.toDate(),
+  }
+}
+
+// vamos a escuchar los cambios en firebase
+// se pasa como parametro una funcion
+// la funcion se ejecutara cada vez que se actualiza docs
+export const listenLatestDevits = (callback) => {
+  return (
+    db
+      .collection('devis')
+      .orderBy('createAt', 'desc')
+      // podemos limitar el numero de docs
+      .limit(20)
+      // .onSnapshot(snapshot =>
+      // snapshot tiene docs
+      // snapchot.docs
+      // podemos extraerlo directamente
+      .onSnapshot(({ docs }) => {
+        // vamnos a mapear los elementos
+        // map nos retorna un array
+        const newDevits = docs.map(mapDevitFromFirebaseToDevitObject)
+        // callback se llama cada vez que que se actualiza docs
+        callback(newDevits)
+      })
+  )
+}
+// lo vamos a usar en home
+
 export const fetchLatestDevit = () => {
   return (
     db
@@ -64,25 +109,11 @@ export const fetchLatestDevit = () => {
       .get()
       // snapshot.docs
       .then(({ docs }) => {
-        return docs.map((doc) => {
-          // we must convert the data into an object
-          const data = doc.data()
-          // we must return the unique id of document
-          const id = doc.id
-          const { createAt } = data
-          /* native way to formate the date
-          const date = new Date(createAt.seconds * 1000) // we always have to pass the time in milliseconds
-          const normalizedCreatedAt = new Intl.DateTimeFormat('es-CO').format(
-            date
-		  )
-		  */
-
-          return {
-            ...data, // todos los elementos que estan en el doc de firebase
-            id,
-            createAt: +createAt.toDate(),
-          }
-        })
+        // las funciones son ciudadanos de primera clase
+        // las funciones sirven como parametros
+        return docs.map(mapDevitFromFirebaseToDevitObject)
+        // vamnos a mapear los elementos
+        // map nos retorna un array
       })
   )
 }
