@@ -18,10 +18,15 @@ export default function HomePage() {
 
   // este es un data fetching del lado del cliente
   useEffect(() => {
-    // user && fetchLatestDevit().then(setTimeline)
+    // firebase normalmente retorna promesas
+    // en el caso del snapshot es una funcion
+    // esta funcion se puede desubscribir
+    let unsubscribe
     if (user) {
-      listenLatestDevits(setTimeline)
+      unsubscribe = listenLatestDevits(setTimeline)
     }
+    // hay que limpiar las subscripciones
+    return () => unsubscribe && listenLatestDevits(setTimeline)
   }, [user])
 
   return (
