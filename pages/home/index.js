@@ -26,6 +26,9 @@ export default function HomePage() {
       unsubscribe = listenLatestDevits(setTimeline)
     }
     // hay que limpiar las subscripciones
+    // return se puede desmontar fetch, intervals, timeOut
+    // en caso fetch usar signal para abortar (find out)
+    // en caso fetch usar abortController para abortar (find out)
     return () => unsubscribe && listenLatestDevits(setTimeline)
   }, [user])
 

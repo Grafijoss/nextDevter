@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react'
+import { formatDate } from './useDateTimeFormat'
+
+// Intl internacionalizacion global existe
+const isRelativeTimeFormatSupported =
+  typeof Intl !== 'undefined' && Intl.RelativeTimeFormat
 
 const DATE_UNITS = [
   ['day', 86400],
@@ -27,12 +32,18 @@ export default function useTimeAgo(timestamp) {
   const [timeAgo, setTimeAgo] = useState(() => getDateDiffs(timestamp))
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const newTimeAgo = getDateDiffs(timestamp)
-      setTimeAgo(newTimeAgo)
-    }, 1000)
-    return () => clearInterval(interval)
+    if (!isRelativeTimeFormatSupported) {
+      const interval = setInterval(() => {
+        const newTimeAgo = getDateDiffs(timestamp)
+        setTimeAgo(newTimeAgo)
+      }, 5000)
+      return () => clearInterval(interval)
+    }
   }, [timestamp])
+
+  if (!isRelativeTimeFormatSupported) {
+    return formatDate(timestamp)
+  }
 
   // relative time format
   const rtf = new Intl.RelativeTimeFormat('es', { style: 'long' }) // short, narrow, long
